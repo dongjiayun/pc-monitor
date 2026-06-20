@@ -3,6 +3,10 @@ dist/
 dist-electron/
 release*/
 release-*/
+build-output/
+build_nsis/
+dist-package/
+dist_build/
 *.exe
 *.exe.blockmap
 *.yaml
@@ -10,3 +14,8 @@ release-*/
 .DS_Store
 Thumbs.db
 *.log
+query
+tsconfig.node.json
+vite.preview.config.ts
+vitest.config.ts
+yarn.lock
