@@ -1,0 +1,599 @@
+/* ============ iOS 17-Inspired Design System ============
+   Reference: exelban/Stats (25k+⭐), Apple HIG
+   ==================================================== */
+
+:root {
+  /* Background - frosted glass */
+  --bg-primary: rgba(0, 0, 0, 0.25);
+  --bg-secondary: rgba(22, 22, 26, 0.30);
+  --bg-tertiary: rgba(28, 28, 30, 0.15);
+  --bg-card: rgba(255, 255, 255, 0.06);
+  --bg-card-hover: rgba(255, 255, 255, 0.10);
+  --bg-subcard: rgba(255, 255, 255, 0.04);
+  --bg-subcard-hover: rgba(255, 255, 255, 0.08);
+
+  /* iOS 17 System Colors */
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.65);
+  --text-tertiary: rgba(255, 255, 255, 0.40);
+  --text-quaternary: rgba(255, 255, 255, 0.22);
+
+  --separator: rgba(255, 255, 255, 0.06);
+  --separator-thick: rgba(255, 255, 255, 0.10);
+  --fill: rgba(120, 120, 128, 0.20);
+  --fill-hover: rgba(120, 120, 128, 0.32);
+
+  /* iOS 17 Accent Colors */
+  --blue: #0a84ff;
+  --green: #30d158;
+  --indigo: #5e5ce6;
+  --purple: #bf5af2;
+  --pink: #ff375f;
+  --orange: #ff9f0a;
+  --yellow: #ffd60a;
+  --red: #ff453a;
+  --teal: #64d2ff;
+  --mint: #00c7be;
+
+  /* Gradients - subtle, iOS style */
+  --gradient-blue: linear-gradient(135deg, #0a84ff, #5e5ce6);
+  --gradient-purple: linear-gradient(135deg, #bf5af2, #ff375f);
+  --gradient-green: linear-gradient(135deg, #30d158, #00c7be);
+  --gradient-orange: linear-gradient(135deg, #ffd60a, #ff9f0a);
+  --gradient-cyan: linear-gradient(135deg, #0a84ff, #64d2ff);
+
+  /* Radius - iOS 17 widget scale */
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-xxl: 22px;
+
+  /* iOS blur tiers */
+  --blur-light: blur(30px) saturate(1.6);
+  --blur-heavy: blur(60px) saturate(1.8);
+
+  /* Typography */
+  --font-display: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  --font-text: -apple-system, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+  --font-mono: 'SF Mono', 'SFMono-Regular', 'JetBrains Mono', monospace;
+
+  /* Transition */
+  --ease-spring: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ============ Reset & Base ============ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; background: transparent; }
+
+body {
+  font-family: var(--font-text);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none;
+  background: transparent;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+#app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(50px) saturate(1.4);
+  -webkit-backdrop-filter: blur(50px) saturate(1.4);
+  border-radius: var(--radius-xxl);
+  overflow: hidden;
+  border: 0.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3),
+              inset 0 0 0 0.5px rgba(255, 255, 255, 0.06),
+              0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.08); border-radius: 1px; }
+
+/* ============ Title Bar ============ */
+.title-bar {
+  -webkit-app-region: drag;
+  height: 16px;
+  flex-shrink: 0;
+  cursor: grab;
+}
+
+/* ============ Main Layout ============ */
+.main-content {
+  flex: 1; overflow-y: auto;
+  padding: 5px 8px 8px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+
+/* ============ Status Bar — Frosted Glass ============ */
+.status-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-xl);
+  flex-shrink: 0;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  box-shadow: inset 0 0.5px 0 0 rgba(255, 255, 255, 0.08);
+}
+.status-bar__item {
+  display: flex; align-items: center; gap: 4px;
+  font-size: 9px; color: var(--text-tertiary);
+  font-weight: 500; letter-spacing: 0.2px;
+}
+.status-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+.status-dot.disconnected { background: var(--red); animation: none; }
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* ============ System Info Row ============ */
+.system-info-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-lg);
+  font-size: 8px; color: var(--text-tertiary);
+  flex-wrap: wrap;
+  border: 0.5px solid rgba(255, 255, 255, 0.05);
+  letter-spacing: 0.1px;
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+}
+.system-info-row .label { color: var(--text-quaternary); }
+.system-info-row .value { color: var(--text-secondary); font-weight: 500; }
+
+/* ============ Dashboard — iOS Widget Grid ============ */
+.dashboard {
+  column-count: 2;
+  column-gap: 5px;
+  flex: 1;
+}
+.dashboard > * {
+  break-inside: avoid;
+  margin-bottom: 5px;
+}
+
+/* ============ Monitor Card — Frosted Glass Widget ============ */
+.monitor-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(40px) saturate(1.5);
+  -webkit-backdrop-filter: blur(40px) saturate(1.5);
+  border: 0.5px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--radius-lg);
+  padding: 8px 10px 10px;
+  transition: all 0.25s var(--ease-spring);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0.5px 0 0 rgba(255, 255, 255, 0.12),
+              0 2px 12px rgba(0, 0, 0, 0.2);
+}
+/* Glass edge gloss — top highlight */
+.monitor-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.20) 20%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0.20) 80%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+/* Glass edge gloss — left edge */
+.monitor-card::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 1px;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.03) 50%,
+    transparent 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+.monitor-card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 0.5px 0 0 rgba(255, 255, 255, 0.15),
+              0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ============ Card Header ============ */
+.card-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 5px;
+  position: relative; z-index: 1;
+}
+.card-title {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.2px;
+}
+
+/* Card Icon — iOS SF Symbol style rounded rect */
+.card-icon {
+  width: 18px; height: 18px; border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px;
+  flex-shrink: 0;
+}
+.card-icon.cpu { background: var(--gradient-blue); color: white; }
+.card-icon.gpu { background: var(--gradient-purple); color: white; }
+.card-icon.memory { background: var(--gradient-green); color: white; }
+.card-icon.disk { background: var(--gradient-orange); color: #1c1c1e; }
+.card-icon.network { background: var(--gradient-cyan); color: white; }
+.card-icon.voltage { background: linear-gradient(135deg, #ff9f0a, #ff453a); color: white; }
+
+/* ============ Card Value ============ */
+.card-value {
+  font-size: 18px; font-weight: 700;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+  text-align: right;
+  position: relative; z-index: 1;
+}
+.card-value.cpu { color: var(--blue); }
+.card-value.gpu { color: var(--purple); }
+.card-value.memory { color: var(--green); }
+.card-value.disk { color: var(--yellow); }
+.card-value.network { color: var(--teal); }
+.card-value.voltage { color: var(--orange); }
+
+/* ============ Card Details — key-value pair list ============ */
+.card-section-label {
+  font-size: 9px; font-weight: 600; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  margin-top: 6px; margin-bottom: 3px;
+}
+.card-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 10px;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 0.5px solid var(--separator);
+}
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+.detail-label {
+  font-size: 8px;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.detail-value {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-primary);
+  font-feature-settings: 'tnum';
+}
+
+/* ============ Progress Bar — iOS Widget Style ============ */
+.progress-bar {
+  width: 100%; height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-top: 4px;
+  position: relative;
+}
+.progress-bar__fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  border-radius: 9999px;
+  transition: width 0.5s var(--ease-out);
+}
+.progress-bar__fill.cpu { background: var(--gradient-blue); }
+.progress-bar__fill.gpu { background: var(--gradient-purple); }
+.progress-bar__fill.memory { background: var(--gradient-green); }
+.progress-bar__fill.disk { background: var(--gradient-orange); }
+
+/* ============ Chart Container ============ */
+.chart-container {
+  width: 100%; height: 60px;
+  margin-top: 3px;
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+  position: relative;
+}
+
+.chart-label {
+  position: absolute; top: 2px; left: 4px;
+  font-size: 7px; color: var(--text-quaternary);
+  text-transform: uppercase; letter-spacing: 0.3px;
+  font-weight: 600; pointer-events: none;
+  z-index: 1;
+}
+
+/* ============ Network Speed ============ */
+.network-speed-group {
+  display: flex; gap: 5px; margin-top: 4px;
+}
+.network-speed {
+  flex: 1; padding: 4px 7px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  border: 0.5px solid rgba(255, 255, 255, 0.04);
+}
+.network-speed__label {
+  font-size: 8px; color: var(--text-tertiary);
+  text-transform: uppercase; letter-spacing: 0.5px;
+  font-weight: 600;
+}
+.network-speed__value {
+  font-size: 12px; font-weight: 700;
+  margin-top: 1px; letter-spacing: -0.2px;
+  font-feature-settings: 'tnum';
+}
+.network-speed__value.download { color: var(--blue); }
+.network-speed__value.upload { color: var(--purple); }
+
+/* ============ Core Grid — iOS CPU Monitor ============ */
+.core-section {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 0.5px solid var(--separator);
+}
+.core-section-title {
+  font-size: 8px; color: var(--text-tertiary);
+  margin-bottom: 3px; font-weight: 600;
+  letter-spacing: 0.5px; text-transform: uppercase;
+}
+.core-group + .core-group {
+  margin-top: 3px; padding-top: 3px;
+  border-top: 0.5px solid var(--separator);
+}
+.core-group-label {
+  font-size: 7px; font-weight: 600; margin-bottom: 2px;
+  letter-spacing: 0.3px;
+}
+.core-group-label.p { color: var(--blue); }
+.core-group-label.e { color: var(--green); }
+.core-grid { display: grid; gap: 2px; align-items: end; }
+
+/* Apple Activity Monitor style vertical bars */
+.core-bar-v {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.core-bar-v-bg {
+  width: 100%;
+  height: 36px;
+  background: rgba(120, 120, 128, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
+}
+.core-bar-v-fill {
+  width: 100%;
+  border-radius: 2px;
+  transition: height 0.4s var(--ease-out);
+  min-height: 1px;
+}
+.core-bar-v-fill.p { background: var(--gradient-blue); }
+.core-bar-v-fill.e { background: linear-gradient(0deg, #30d158, #34c759); }
+.core-bar-v-fill.ht { background: linear-gradient(0deg, #bf5af2, #5e5ce6); }
+
+.core-bar-v-pct {
+  font-size: 7px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  text-align: center;
+  font-feature-settings: 'tnum';
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.core-grid.cols-1 { grid-template-columns: repeat(1, 1fr); }
+.core-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.core-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.core-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+.core-grid.cols-5 { grid-template-columns: repeat(5, 1fr); }
+.core-grid.cols-6 { grid-template-columns: repeat(6, 1fr); }
+.core-grid.cols-7 { grid-template-columns: repeat(7, 1fr); }
+.core-grid.cols-8 { grid-template-columns: repeat(8, 1fr); }
+.core-legend {
+  display: flex; align-items: center; gap: 5px;
+  margin-top: 3px; font-size: 7px; color: var(--text-tertiary);
+}
+.legend-dot { width: 5px; height: 5px; border-radius: 9999px; display: inline-block; }
+.legend-dot.p { background: var(--blue); }
+.legend-dot.ht { background: #bf5af2; }
+.legend-dot.e { background: var(--green); }
+
+/* ============ Disk Subcards ============ */
+.disk-list { margin-top: 4px; }
+.disk-subcard {
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  margin-bottom: 3px;
+  transition: background 0.15s var(--ease-spring);
+  border: 0.5px solid rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.disk-subcard:hover { background: var(--bg-subcard-hover); }
+.disk-subcard-top {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.disk-subcard-left {
+  display: flex; align-items: center; gap: 6px; flex: 1; min-width: 0;
+}
+.disk-subcard-icon {
+  width: 18px; height: 18px; border-radius: 9999px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; flex-shrink: 0;
+}
+.disk-subcard-icon.ssd { background: rgba(48, 209, 88, 0.15); }
+.disk-subcard-icon.hdd { background: rgba(255, 214, 10, 0.15); }
+.disk-subcard-name { font-size: 11px; font-weight: 600; }
+.disk-subcard-model { font-size: 8px; color: var(--text-tertiary); }
+.disk-subcard-badges { display: flex; gap: 3px; }
+.disk-badge {
+  font-size: 7px; padding: 1px 5px; border-radius: 9999px;
+  font-weight: 600; height: 14px; line-height: 12px;
+}
+.disk-badge.type-badge.ssd { background: rgba(48, 209, 88, 0.15); color: var(--green); }
+.disk-badge.type-badge.hdd { background: rgba(255, 214, 10, 0.15); color: var(--yellow); }
+.disk-badge.health-badge.good { background: rgba(48, 209, 88, 0.15); color: var(--green); }
+.disk-badge.health-badge.bad { background: rgba(255, 69, 58, 0.15); color: var(--red); }
+.disk-usage-row {
+  display: flex; align-items: center; gap: 6px; margin-top: 3px;
+}
+.disk-usage-bar {
+  flex: 1; height: 3px;
+  background: rgba(120, 120, 128, 0.10);
+  border-radius: 9999px; overflow: hidden; position: relative;
+}
+.disk-usage-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s var(--ease-out);
+}
+.disk-usage-text {
+  font-size: 8px; color: var(--text-tertiary);
+  white-space: nowrap; font-weight: 500;
+  font-feature-settings: 'tnum';
+}
+.disk-speed-row {
+  display: flex; gap: 12px; margin-top: 3px;
+  font-size: 8px; font-weight: 500;
+}
+.disk-speed-read {
+  color: #1d9bf0;
+}
+.disk-speed-write {
+  color: #a855f7;
+}
+
+/* ============ GPU Items ============ */
+.gpu-item {
+  display: flex; align-items: center; gap: 6px; padding: 3px 0;
+}
+.gpu-item + .gpu-item {
+  border-top: 0.5px solid var(--separator);
+}
+.gpu-model {
+  font-size: 9px; font-weight: 600;
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.gpu-stat {
+  font-size: 9px; color: var(--text-secondary);
+  white-space: nowrap; font-weight: 500;
+  font-feature-settings: 'tnum';
+}
+
+/* ============ Voltage / Sensor Items ============ */
+.sensor-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 2px 0;
+}
+.sensor-item + .sensor-item {
+  border-top: 0.5px solid var(--separator);
+}
+.sensor-label {
+  font-size: 9px; color: var(--text-secondary);
+  font-weight: 500;
+}
+.sensor-value {
+  font-size: 9px; font-weight: 600;
+  font-feature-settings: 'tnum';
+}
+
+/* ============ Animations ============ */
+.fade-in {
+  animation: fadeIn 0.4s var(--ease-out) forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-stagger {
+  animation: fadeIn 0.4s var(--ease-out) forwards;
+  opacity: 0;
+}
+
+/* ============ Loading State ============ */
+.loading {
+  display: flex; align-items: center; justify-content: center;
+  height: 100vh; flex-direction: column; gap: 12px;
+}
+.loading-spinner {
+  width: 24px; height: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.06);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: spin 0.8s var(--ease-out) infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text {
+  color: var(--text-tertiary);
+  font-size: 11px; font-weight: 400;
+}
+
+/* ============ Error State ============ */
+.error-container {
+  display: flex; align-items: center; justify-content: center;
+  height: 100vh; flex-direction: column; gap: 8px;
+}
+.error-icon { font-size: 28px; opacity: 0.6; }
+.error-text { color: var(--text-tertiary); font-size: 11px; }
+
+/* ============ Memory Stick Item ============ */
+.memory-stick {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 5px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  margin-bottom: 2px;
+  transition: background 0.15s var(--ease-spring);
+  border: 0.5px solid rgba(255, 255, 255, 0.03);
+}
+.memory-stick:hover { background: var(--bg-subcard-hover); }
+.memory-stick-idx {
+  font-size: 8px; color: var(--text-tertiary);
+  font-weight: 600; min-width: 14px;
+}
+.memory-stick-brand {
+  font-size: 9px; font-weight: 600;
+  flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.memory-stick-size {
+  font-size: 9px; color: var(--text-secondary);
+  font-weight: 500; white-space: nowrap;
+  font-feature-settings: 'tnum';
+}
+.memory-stick-speed {
+  font-size: 7px; color: var(--text-tertiary);
+  white-space: nowrap;
+  font-feature-settings: 'tnum';
+}

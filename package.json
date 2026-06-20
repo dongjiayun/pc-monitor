@@ -1,0 +1,79 @@
+{
+  "name": "pc-monitor",
+  "version": "1.0.0",
+  "description": "Windows 桌面性能监控插件 - 美观实时的系统监控工具",
+  "main": "dist-electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "dev:electron": "vite build && electron .",
+    "build": "vite build && electron-builder",
+    "build:pack": "powershell -ExecutionPolicy Bypass -File scripts/build.ps1",
+    "build:vite": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@antv/g2": "^5.4.8",
+    "echarts": "^5.5.0",
+    "pinia": "^3.0.4",
+    "systeminformation": "^5.22.0",
+    "vue": "^3.4.0",
+    "vue-echarts": "^6.6.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.0",
+    "happy-dom": "^14.0.0",
+    "jsdom": "^24.0.0",
+    "typescript": "^5.3.0",
+    "vite": "^5.0.0",
+    "vite-plugin-electron": "^0.28.0",
+    "vite-plugin-electron-renderer": "^0.14.0",
+    "vitest": "^1.2.0",
+    "vue-tsc": "^1.8.0"
+  },
+  "build": {
+    "appId": "com.pc-monitor.app",
+    "productName": "PC Monitor",
+    "directories": {
+      "output": "release"
+    },
+    "extraResources": [
+      {
+        "from": "electron/lib",
+        "to": "lhm"
+      },
+      {
+        "from": "electron/lhm_gpu.ps1",
+        "to": "lhm/lhm_gpu.ps1"
+      },
+      {
+        "from": "public/icon.png",
+        "to": "icons/icon.png"
+      },
+      {
+        "from": "public/icon-64.png",
+        "to": "icons/icon-64.png"
+      },
+      {
+        "from": "public/icon-32.png",
+        "to": "icons/icon-32.png"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  }
+}
